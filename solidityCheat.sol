@@ -438,17 +438,44 @@ contract MyContract {
     }
 }
 
+
+// Interface declaration for the ERC20 token standard
 interface IERC20 {
+    // Function to transfer tokens from one address to another
     function transferFrom(
         address _from,
         address _to,
         uint256 _value
-)
+    )
     external
     returns (bool success);
 }
+
+// Contract that interacts with ERC20 tokens
 contract MyContract {
-    function deposit (address _tokenAddress, uint amount) public {
-        IERC20 (_tokenAddress).transferFrom (msg.sender, address(this), _amount);
+    // Function to deposit ERC20 tokens
+    function deposit(address _tokenAddress, uint256 _amount) public {
+        // Create an instance of the IERC20 interface using the provided token address
+        IERC20 token = IERC20(_tokenAddress);
+        
+        // Call the transferFrom function of the ERC20 token
+        // Transfers tokens from the sender to this contract's address
+        token.transferFrom(msg.sender, address(this), _amount);
+    }
+}
+
+// ETHER 
+// used to send and receive Ether (ETH) from a smart contract
+contract MyEther {
+    // Function for transferring Ether to another address
+    function transfer(address payable _to) public payable {
+        // Call the 'call' function to send Ether to the specified address
+        
+        // Declare a boolean variable 'sent' to store the result of the call
+        // and ignore the second return value using an underscore
+        (bool sent, ) = _to.call{value: msg.value}("");
+
+        // Check if the call was successful
+        require(sent, "Failed to send Ether");
     }
 }
